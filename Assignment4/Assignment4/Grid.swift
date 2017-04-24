@@ -1,6 +1,8 @@
 //
 //  Grid.swift
 //
+import Foundation
+
 public typealias GridPosition = (row: Int, col: Int)
 public typealias GridSize = (rows: Int, cols: Int)
 
@@ -13,6 +15,13 @@ public enum CellState {
         switch self {
         case .alive, .born: return true
         default: return false
+        }
+    }
+    
+    func toggle(value:CellState) -> CellState {
+        switch value {
+        case .alive, .born : return CellState.empty
+        default: return CellState.alive
         }
     }
 }
@@ -141,3 +150,110 @@ public extension Grid {
         }
     }
 }
+
+protocol ViewDelegate {
+    func viewDidUpdate(withGrid: GridProtocol)
+}
+
+
+protocol EngineDelegate {
+    func engineDidUpdate(withGrid: GridProtocol)
+}
+
+
+protocol EngineProtocol {
+    var delegate : EngineDelegate? { get set }
+    var grid : GridProtocol { get set }
+    var refreshRate : Double { get set }
+    var refreshTimer : Timer? { get set }
+    var rows : Int { get set }
+    var cols : Int { get set }
+    var size : Int { get set }
+    func step() -> GridProtocol
+}
+
+class StandardEngine : EngineProtocol {
+    static var engine : EngineProtocol = StandardEngine(rows:10, cols:10)
+    
+    var delegate: EngineDelegate?
+    var grid : GridProtocol
+    var refreshRate : Double = 0.0 {
+        didSet {
+            if refreshRate > 0.0 {
+                    refreshTimer = Timer.scheduledTimer(
+                        withTimeInterval: refreshRate,
+                        repeats: true) {
+                            (t: Timer) in
+                            _ = self.step()
+                    }
+            }
+            else {
+                refreshTimer?.invalidate()
+                refreshTimer = nil
+            }
+        }
+    }
+    var refreshTimer : Timer?
+    var rows : Int /*{
+
+        didSet {
+            self.cols = rows
+            self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
+            notify(withGrid: self.grid)
+        }
+
+    } */
+    var cols : Int /*{
+
+        didSet {
+            self.rows = cols
+            self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
+            notify(withGrid: self.grid)
+        }
+
+    }*/
+    var size : Int {
+        didSet {
+            self.rows = size
+            self.cols = size
+            self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
+            notify(withGrid: self.grid)
+        }
+    }
+    
+    init (rows: Int, cols: Int) {
+        self.size = 0
+        self.rows = rows
+        self.cols = cols
+        
+        self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
+    }
+
+    init (rows: Int, cols: Int, delegate: EngineDelegate) {
+        self.size = 0
+        self.rows = rows
+        self.cols = cols
+        
+        self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
+        self.delegate = delegate
+    }
+
+    func step() -> GridProtocol {
+        grid = grid.next()
+        notify(withGrid: grid)
+    
+        return grid
+    }
+    private func notify(withGrid: GridProtocol) {
+        //print("Grid.size: r-\(withGrid.size.rows) c-\(withGrid.size.cols)")
+        delegate?.engineDidUpdate(withGrid: withGrid)
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        let n = Notification(name: name, object: withGrid, userInfo: ["StandardEngine" : self])
+        nc.post(n)
+        
+    }
+}
+
+
+
