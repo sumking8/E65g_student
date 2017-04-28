@@ -57,7 +57,7 @@ class StatisticsViewController: UIViewController {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            self.reset()
+            //self.reset()
             let engine = n.userInfo?["StandardEngine"] as! EngineProtocol
             let size = engine.grid.size
             self.count(row: size.rows, col: size.cols, g: engine.grid)
@@ -70,7 +70,7 @@ class StatisticsViewController: UIViewController {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "ViweUpdate")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            self.reset()
+            //self.reset()
             let gridView = n.userInfo?["GridView"] as! GridView
             let size = gridView.grid?.size
             self.count(row: (size?.rows)!, col: (size?.cols)!, g: gridView.grid!)
