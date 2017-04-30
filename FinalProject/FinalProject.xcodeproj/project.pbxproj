@@ -7,19 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8804965D1EB4ABB2002E0AB2 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804965C1EB4ABB2002E0AB2 /* StatisticsViewController.swift */; };
+		883050AC1EB612A9009696EE /* SimulationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883050AB1EB612A9009696EE /* SimulationViewController.swift */; };
+		883CDAAA1EB2118B003AC121 /* GridEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CDAA91EB2118B003AC121 /* GridEditorViewController.swift */; };
+		883CDAAC1EB2193E003AC121 /* DataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CDAAB1EB2193E003AC121 /* DataHelper.swift */; };
+		8876CC6C1EB1EF5400AA2C97 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8876CC6B1EB1EF5400AA2C97 /* GridView.swift */; };
+		8876CC6E1EB1EF6800AA2C97 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8876CC6D1EB1EF6800AA2C97 /* Grid.swift */; };
+		8876CC701EB1F91200AA2C97 /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8876CC6F1EB1F91200AA2C97 /* Fetcher.swift */; };
+		88FA85291EB6047C00AB0231 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA85281EB6047C00AB0231 /* Engine.swift */; };
 		FBAD2E271E2BE417008207C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E261E2BE417008207C0 /* AppDelegate.swift */; };
-		FBAD2E291E2BE417008207C0 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E281E2BE417008207C0 /* FirstViewController.swift */; };
-		FBAD2E2B1E2BE417008207C0 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E2A1E2BE417008207C0 /* SecondViewController.swift */; };
+		FBAD2E291E2BE417008207C0 /* InstrumentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E281E2BE417008207C0 /* InstrumentationViewController.swift */; };
 		FBAD2E2E1E2BE417008207C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E2C1E2BE417008207C0 /* Main.storyboard */; };
 		FBAD2E301E2BE417008207C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E2F1E2BE417008207C0 /* Assets.xcassets */; };
 		FBAD2E331E2BE417008207C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E311E2BE417008207C0 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8804965C1EB4ABB2002E0AB2 /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		883050AB1EB612A9009696EE /* SimulationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimulationViewController.swift; sourceTree = "<group>"; };
+		883CDAA91EB2118B003AC121 /* GridEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridEditorViewController.swift; sourceTree = "<group>"; };
+		883CDAAB1EB2193E003AC121 /* DataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHelper.swift; sourceTree = "<group>"; };
+		8876CC6B1EB1EF5400AA2C97 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GridView.swift; path = ../../Assignment4/Assignment4/GridView.swift; sourceTree = "<group>"; };
+		8876CC6D1EB1EF6800AA2C97 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grid.swift; path = ../../Assignment4/Assignment4/Grid.swift; sourceTree = "<group>"; };
+		8876CC6F1EB1F91200AA2C97 /* Fetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Fetcher.swift; path = ../../../E65g_materials/Lecture12/Lecture12/Fetcher.swift; sourceTree = "<group>"; };
+		88FA85281EB6047C00AB0231 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
 		FBAD2E231E2BE417008207C0 /* FinalProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinalProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBAD2E261E2BE417008207C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FBAD2E281E2BE417008207C0 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		FBAD2E2A1E2BE417008207C0 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		FBAD2E281E2BE417008207C0 /* InstrumentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentationViewController.swift; sourceTree = "<group>"; };
 		FBAD2E2D1E2BE417008207C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FBAD2E2F1E2BE417008207C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FBAD2E321E2BE417008207C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -56,10 +70,17 @@
 		FBAD2E251E2BE417008207C0 /* FinalProject */ = {
 			isa = PBXGroup;
 			children = (
+				883050AB1EB612A9009696EE /* SimulationViewController.swift */,
+				88FA85281EB6047C00AB0231 /* Engine.swift */,
+				883CDAA91EB2118B003AC121 /* GridEditorViewController.swift */,
 				FBAD2E261E2BE417008207C0 /* AppDelegate.swift */,
-				FBAD2E281E2BE417008207C0 /* FirstViewController.swift */,
-				FBAD2E2A1E2BE417008207C0 /* SecondViewController.swift */,
+				FBAD2E281E2BE417008207C0 /* InstrumentationViewController.swift */,
+				883CDAAB1EB2193E003AC121 /* DataHelper.swift */,
+				8804965C1EB4ABB2002E0AB2 /* StatisticsViewController.swift */,
 				FBAD2E2C1E2BE417008207C0 /* Main.storyboard */,
+				8876CC6F1EB1F91200AA2C97 /* Fetcher.swift */,
+				8876CC6D1EB1EF6800AA2C97 /* Grid.swift */,
+				8876CC6B1EB1EF5400AA2C97 /* GridView.swift */,
 				FBAD2E2F1E2BE417008207C0 /* Assets.xcassets */,
 				FBAD2E311E2BE417008207C0 /* LaunchScreen.storyboard */,
 				FBAD2E341E2BE417008207C0 /* Info.plist */,
@@ -140,9 +161,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBAD2E2B1E2BE417008207C0 /* SecondViewController.swift in Sources */,
+				8804965D1EB4ABB2002E0AB2 /* StatisticsViewController.swift in Sources */,
+				8876CC701EB1F91200AA2C97 /* Fetcher.swift in Sources */,
 				FBAD2E271E2BE417008207C0 /* AppDelegate.swift in Sources */,
-				FBAD2E291E2BE417008207C0 /* FirstViewController.swift in Sources */,
+				883050AC1EB612A9009696EE /* SimulationViewController.swift in Sources */,
+				8876CC6C1EB1EF5400AA2C97 /* GridView.swift in Sources */,
+				FBAD2E291E2BE417008207C0 /* InstrumentationViewController.swift in Sources */,
+				883CDAAA1EB2118B003AC121 /* GridEditorViewController.swift in Sources */,
+				8876CC6E1EB1EF6800AA2C97 /* Grid.swift in Sources */,
+				883CDAAC1EB2193E003AC121 /* DataHelper.swift in Sources */,
+				88FA85291EB6047C00AB0231 /* Engine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +295,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 56MEECX7CG;
 				INFOPLIST_FILE = FinalProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.FinalProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -281,7 +309,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 56MEECX7CG;
 				INFOPLIST_FILE = FinalProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.FinalProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -308,6 +336,7 @@
 				FBAD2E391E2BE417008207C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
