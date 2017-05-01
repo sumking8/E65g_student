@@ -151,9 +151,22 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
+            let title = dataHelper.data[indexPath.section][indexPath.row]
             var newData = dataHelper.data[indexPath.section]
             newData.remove(at: indexPath.row)
             dataHelper.data[indexPath.section] = newData
+            
+            var defaultData = UserDefaults.standard.array(forKey: "json") as! [Dictionary<String, Any>]
+            for i in 0...defaultData.count - 1 {
+                let defaultTitle = defaultData[i]["title"] as! String
+                if title ==  defaultTitle {
+                    defaultData.remove(at: i)
+                    UserDefaults.standard.set(defaultData, forKey: "json")
+                    UserDefaults.standard.synchronize()
+                    break
+                }
+            }
+            
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.reloadData()
         }

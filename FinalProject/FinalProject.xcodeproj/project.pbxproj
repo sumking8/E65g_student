@@ -70,20 +70,20 @@
 		FBAD2E251E2BE417008207C0 /* FinalProject */ = {
 			isa = PBXGroup;
 			children = (
-				889C85601EB661EE00C09E83 /* GridView.swift */,
-				889C85611EB661EE00C09E83 /* Grid.swift */,
-				883050AB1EB612A9009696EE /* SimulationViewController.swift */,
-				88FA85281EB6047C00AB0231 /* Engine.swift */,
-				883CDAA91EB2118B003AC121 /* GridEditorViewController.swift */,
 				FBAD2E261E2BE417008207C0 /* AppDelegate.swift */,
-				FBAD2E281E2BE417008207C0 /* InstrumentationViewController.swift */,
-				883CDAAB1EB2193E003AC121 /* DataHelper.swift */,
-				8804965C1EB4ABB2002E0AB2 /* StatisticsViewController.swift */,
-				FBAD2E2C1E2BE417008207C0 /* Main.storyboard */,
-				8876CC6F1EB1F91200AA2C97 /* Fetcher.swift */,
 				FBAD2E2F1E2BE417008207C0 /* Assets.xcassets */,
-				FBAD2E311E2BE417008207C0 /* LaunchScreen.storyboard */,
+				883CDAAB1EB2193E003AC121 /* DataHelper.swift */,
+				88FA85281EB6047C00AB0231 /* Engine.swift */,
+				8876CC6F1EB1F91200AA2C97 /* Fetcher.swift */,
+				889C85611EB661EE00C09E83 /* Grid.swift */,
+				883CDAA91EB2118B003AC121 /* GridEditorViewController.swift */,
+				889C85601EB661EE00C09E83 /* GridView.swift */,
 				FBAD2E341E2BE417008207C0 /* Info.plist */,
+				FBAD2E281E2BE417008207C0 /* InstrumentationViewController.swift */,
+				FBAD2E311E2BE417008207C0 /* LaunchScreen.storyboard */,
+				FBAD2E2C1E2BE417008207C0 /* Main.storyboard */,
+				883050AB1EB612A9009696EE /* SimulationViewController.swift */,
+				8804965C1EB4ABB2002E0AB2 /* StatisticsViewController.swift */,
 			);
 			path = FinalProject;
 			sourceTree = "<group>";

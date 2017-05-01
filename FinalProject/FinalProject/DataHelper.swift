@@ -75,9 +75,9 @@ class DataHelper {
     
     func assignData(data: [Dictionary<String, Any>]) {
         internalQueue.sync {
-        for i in 0...data.count - 1 {
-            self.jsonArray.append(data[i])
-        }
+            for i in 0...data.count - 1 {
+                self.jsonArray.append(data[i])
+            }
         }
     }
     
