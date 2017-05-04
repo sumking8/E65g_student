@@ -39,9 +39,11 @@ class SimulationViewController: UIViewController
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridEditorSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            let g = n.userInfo?["GridView"] as! GridView
-            self.updateEngineGrid(withGrid: g.grid!)
-            self.updateGridViewGrid(withGrid: g.grid!)
+            //let g = n.userInfo?["GridView"] as! GridView
+
+            let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
+            self.updateEngineGrid(withGrid: g.gridView.grid!)
+            self.updateGridViewGrid(withGrid: g.gridView.grid!)
         }
     }
     

@@ -35,11 +35,18 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridEditorSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            let g = n.userInfo?["GridView"] as! GridView
-            if let size = g.grid?.size.rows {
+            //let g = n.userInfo?["GridView"] as! GridView
+            let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
+            if let size = g.gridView.grid?.size.rows {
                 self.sizeTextField.text = String(describing: size)
                 self.colLabel.text = self.sizeTextField.text
                 self.rowLabel.text = self.sizeTextField.text
+                let indexPath = self.tableView.indexPathForSelectedRow
+                if let indexPath = indexPath {
+                    self.dataHelper.data[indexPath.section][indexPath.row] = g.name
+                    self.tableView.reloadData()
+
+                }
             }
         }
     }
@@ -49,7 +56,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let name = Notification.Name(rawValue: "SimulationSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
             let newConfigurationName = n.userInfo?["Name"] as! String
-            self.addRowToTable(withName: newConfigurationName)
+            self.addRowToTable(withName: newConfigurationName, source: "SimulationSave")
             
         }
     }
@@ -239,6 +246,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     print(type(of:segue.destination))
                     if let vc = segue.destination as? GridEditorViewController {
                         vc.grid = Grid(maxRowCol, maxRowCol, cellInitializer: cellInitializer)
+                        let indexPath = self.tableView.indexPathForSelectedRow
+                        if let indexPath = indexPath {
+                            vc.name = self.dataHelper.data[indexPath.section][indexPath.row]
+                        }
                         //vc.gridView.setNeedsDisplay();
                         /*
                          vc.saveClosure = { newValue in
@@ -254,7 +265,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     
-    func addRowToTable(withName: String) {
+    func addRowToTable(withName: String, source: String) {
         dataHelper.data[0].append(withName)
         var iArray = [[Int]]()
         var bArray = [[Int]]()
@@ -282,7 +293,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if dArray.count > 0 {
             dict["died"] = dArray
         }
-        self.saveUserDefault(title: withName, dict: dict)
+        self.saveUserDefault(title: withName, dict: dict, source:source)
         dataHelper.jsonArray.append(dict)
         tableView.beginUpdates()
         tableView.insertRows(at: [IndexPath(row: dataHelper.data[0].count-1, section: 0)], with: .automatic)
@@ -290,7 +301,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         print("Somehting")
     }
     
-    func saveUserDefault(title:String, dict:Dictionary<String, Any>) {
+    func saveUserDefault(title:String, dict:Dictionary<String, Any>, source:String) {
         if let mySavedArray = UserDefaults.standard.object(forKey: "json") {
             var array = mySavedArray as! [Dictionary<String, Any>]
             //var newArray = [Dictionary<String, Any>]()
@@ -314,7 +325,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             UserDefaults.standard.set(newArray, forKey: "json")
             
         }
-        UserDefaults.standard.set(dict, forKey: "lastSaveForSimulation")
+        if (source == "SimulationSave") {
+            UserDefaults.standard.set(dict, forKey: "lastSaveForSimulation")
+        }
         UserDefaults.standard.synchronize()
     }
     
@@ -325,7 +338,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             if let field = alertController.textFields?[0] {
                 // store your data
                 let newConfigurationName = field.text!
-                self.addRowToTable(withName: newConfigurationName)
+                self.addRowToTable(withName: newConfigurationName, source:"addRows")
                 
             } else {
                 // user did not fill field

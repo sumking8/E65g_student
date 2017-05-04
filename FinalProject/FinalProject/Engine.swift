@@ -83,9 +83,10 @@ class StandardEngine : EngineProtocol {
         let name = Notification.Name(rawValue: "GridEditorSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
             print("At Engine before size = \(self.grid.size)")
-            let g = n.userInfo?["GridView"] as! GridView
-            self.grid = g.grid!
-            self.size = (g.grid?.size.rows)!
+            //let g = n.userInfo?["GridView"] as! GridView
+            let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
+            self.grid = g.gridView.grid!
+            self.size = (g.gridView.grid?.size.rows)!
             print("At Engine after size = \(self.grid.size)")
         }
  
