@@ -89,4 +89,49 @@ class DataHelper {
         }
         return newArray
     }
+    
+    func formatNewData(title:String) -> Dictionary<String, Any> {
+        var iArray = [[Int]]()
+        var bArray = [[Int]]()
+        var dArray = [[Int]]()
+        var eArray = [[Int]]()
+        let size = StandardEngine.instance.size
+        for i in 0...size {
+            for j in 0...size {
+                switch StandardEngine.instance.grid[i, j] {
+                case .alive:
+                    iArray.append([i,j])
+                case .born : bArray.append([i,j])
+                case .died : dArray.append([i,j])
+                default: eArray.append([i,j])
+                }
+            }
+        }
+        var dict = Dictionary<String, Any>()
+        dict["title"] = title
+        dict["contents"] = iArray
+        dict["size"] = StandardEngine.instance.size
+        if bArray.count > 0 {
+            dict["born"] = bArray
+        }
+        if dArray.count > 0 {
+            dict["died"] = dArray
+        }
+        return dict
+    }
+    
+    func getData(title:String) -> Dictionary<String, Any>? {
+        var result : Dictionary<String, Any>?
+        if self.jsonArray.count > 0 {
+            for i in 0...jsonArray.count - 1 {
+                let jsonDictionary = jsonArray[i]
+                let t = jsonDictionary["title"] as! String
+                if title == t {
+                    result = jsonArray[i]
+                    break;
+                }
+            }
+        }
+        return result
+    }
 }

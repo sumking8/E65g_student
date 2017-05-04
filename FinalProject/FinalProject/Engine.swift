@@ -24,7 +24,7 @@ protocol EngineProtocol {
 }
 
 class StandardEngine : EngineProtocol {
-    static var engine : EngineProtocol = StandardEngine(rows:10, cols:10)
+    static var instance : EngineProtocol = StandardEngine(rows:10, cols:10)
     
     var delegate: EngineDelegate?
     var grid : GridProtocol

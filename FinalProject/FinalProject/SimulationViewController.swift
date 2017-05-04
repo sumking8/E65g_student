@@ -15,7 +15,7 @@ class SimulationViewController: UIViewController
     @IBOutlet weak var stepButton: UIButton!
     @IBOutlet weak var grid: GridView!
     
-    var engine : EngineProtocol = StandardEngine.engine
+    var engine : EngineProtocol = StandardEngine.instance
     
     // Notificatoin from Engine
     private func registerEngineNotification() {
@@ -45,7 +45,7 @@ class SimulationViewController: UIViewController
             //let g = n.userInfo?["GridView"] as! GridView
             
             let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
-            self.updateEngineGrid(withGrid: g.gridView.grid!)
+            //self.updateEngineGrid(withGrid: g.gridView.grid!)
             self.updateGridViewGrid(withGrid: g.gridView.grid!)
         }
     }

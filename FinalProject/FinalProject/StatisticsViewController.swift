@@ -23,7 +23,7 @@ class StatisticsViewController: UIViewController {
         registerGridViewNotification()
         registerGridEditorSaveNotification()
         
-        let engine = StandardEngine.engine
+        let engine = StandardEngine.instance
         self.reset()
         self.count(row: engine.grid.size.rows, col: engine.grid.size.cols, g: engine.grid)
         aView.setNeedsDisplay()

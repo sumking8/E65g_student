@@ -8,14 +8,6 @@
 
 import UIKit
 
-
-//var sectionHeaders = ["Configurations"]
-//    "One", "Two", "Three", "Four", "Five", "Six"]
-
-
-// missing part???????
-// 1.
-
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var dataHelper = DataHelper.instance
@@ -29,7 +21,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshRateSlider: UISlider!
     
-    var engine : EngineProtocol = StandardEngine.engine
+    var engine : EngineProtocol = StandardEngine.instance
     
     // Notification from GridEditor when save
     private func registerGridEditorSaveNotification() {
@@ -51,15 +43,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     self.tableView.reloadData()
                     
                     // update the userdefault
-                    var defaultData = UserDefaults.standard.array(forKey: "json") as! [Dictionary<String, Any>]
-                    if defaultData.count > 1 {
-                        for i in 0...defaultData.count - 1 {
-                            let defaultTitle = defaultData[i]["title"] as! String
-                            if oldName ==  defaultTitle {
-                                defaultData[i]["title"] = g.name
-                                UserDefaults.standard.set(defaultData, forKey: "json")
-                                UserDefaults.standard.synchronize()
-                                break
+                    if let dData = UserDefaults.standard.array(forKey: "json") {
+                        var defaultData = dData as! [Dictionary<String, Any>]
+                        if defaultData.count > 1 {
+                            for i in 0...defaultData.count - 1 {
+                                let defaultTitle = defaultData[i]["title"] as! String
+                                if oldName ==  defaultTitle {
+                                    defaultData[i]["title"] = g.name
+                                    UserDefaults.standard.set(defaultData, forKey: "json")
+                                    UserDefaults.standard.synchronize()
+                                    break
+                                }
                             }
                         }
                     }
@@ -77,7 +71,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             self.addRowToTable(withName: newConfigurationName, source: "SimulationSave")
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -91,7 +85,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         registerGridEditorSaveNotification()
         registerSimulationSaveNotification()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         //navigationController?.isNavigationBarHidden = true
         
@@ -183,14 +177,18 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             dataHelper.data[indexPath.section] = newData
             
             // Updating the data in UserDefault
-            var defaultData = UserDefaults.standard.array(forKey: "json") as! [Dictionary<String, Any>]
-            for i in 0...defaultData.count - 1 {
-                let defaultTitle = defaultData[i]["title"] as! String
-                if title ==  defaultTitle {
-                    defaultData.remove(at: i)
-                    UserDefaults.standard.set(defaultData, forKey: "json")
-                    UserDefaults.standard.synchronize()
-                    break
+            if let dData = UserDefaults.standard.array(forKey: "json") {
+                var defaultData = dData as! [Dictionary<String, Any>]
+                if defaultData.count > 0 {
+                    for i in 0...defaultData.count - 1 {
+                        let defaultTitle = defaultData[i]["title"] as! String
+                        if title ==  defaultTitle {
+                            defaultData.remove(at: i)
+                            UserDefaults.standard.set(defaultData, forKey: "json")
+                            UserDefaults.standard.synchronize()
+                            break
+                        }
+                    }
                 }
             }
             
@@ -275,7 +273,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     // Add a new row to table
     private func addRowToTable(withName: String, source: String) {
-        dataHelper.data[0].append(withName)
+        /*
         var iArray = [[Int]]()
         var bArray = [[Int]]()
         var dArray = [[Int]]()
@@ -302,11 +300,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if dArray.count > 0 {
             dict["died"] = dArray
         }
+         */
+
+        let dict = DataHelper.instance.formatNewData(title:withName)
         
         // Update the UserDefault
         self.saveUserDefault(title: withName, dict: dict, source:source)
         
         // Update table
+        dataHelper.data[0].append(withName)
         dataHelper.jsonArray.append(dict)
         tableView.beginUpdates()
         tableView.insertRows(at: [IndexPath(row: dataHelper.data[0].count-1, section: 0)], with: .automatic)
