@@ -9,14 +9,15 @@
 import UIKit
 
 class SimulationViewController: UIViewController
-//, EngineDelegate
+    //, EngineDelegate
 {
-
+    
     @IBOutlet weak var stepButton: UIButton!
     @IBOutlet weak var grid: GridView!
-
+    
     var engine : EngineProtocol = StandardEngine.engine
     
+    // Notificatoin from Engine
     private func registerEngineNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -26,6 +27,7 @@ class SimulationViewController: UIViewController
         }
     }
     
+    // Notification from GridViewNotification (touch the grid)
     private func registerGridViewNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "ViweUpdate")
@@ -34,13 +36,14 @@ class SimulationViewController: UIViewController
             self.updateEngineGrid(withGrid: g.grid!)
         }
     }
-
+    
+    // Notification from GridEditor save action
     private func registerGridEditorSaveNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridEditorSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
             //let g = n.userInfo?["GridView"] as! GridView
-
+            
             let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
             self.updateEngineGrid(withGrid: g.gridView.grid!)
             self.updateGridViewGrid(withGrid: g.gridView.grid!)
@@ -62,33 +65,42 @@ class SimulationViewController: UIViewController
         registerEngineNotification()
         registerGridViewNotification()
         registerGridEditorSaveNotification()
+        
+        // ensure the GrivView will notify when someone touch the grid.
         self.grid.fireNotification = true
-
+        
+        // check whether there is latest saved
         if let lastSave = UserDefaults.standard.object(forKey: "lastSaveForSimulation") {
             let ls = lastSave as! Dictionary<String, Any>
             let size = ls["size"] as! Int
             let cellInitializer = { (pos: GridPosition) -> CellState in
                 if let a = ls["contents"] {
                     let alive = a as! [[Int]]
-                    for i in 0...alive.count - 1 {
-                        if (pos.row == alive[i][0]) && (pos.col == alive[i][1]) {
-                        return .alive
+                    if alive.count > 0 {
+                        for i in 0...alive.count - 1 {
+                            if (pos.row == alive[i][0]) && (pos.col == alive[i][1]) {
+                                return .alive
+                            }
+                        }
                     }
-                }
                 }
                 if let b = ls["born"] {
                     let born = b as! [[Int]]
-                    for i in 0...born.count - 1 {
-                        if (pos.row == born[i][0]) && (pos.col == born[i][1]) {
-                            return .born
+                    if born.count > 0 {
+                        for i in 0...born.count - 1 {
+                            if (pos.row == born[i][0]) && (pos.col == born[i][1]) {
+                                return .born
+                            }
                         }
                     }
                 }
                 if let d = ls["died"] {
                     let died = d as! [[Int]]
-                    for i in 0...died.count - 1 {
-                        if (pos.row == died[i][0]) && (pos.col == died[i][1]) {
-                            return .died
+                    if died.count > 0 {
+                        for i in 0...died.count - 1 {
+                            if (pos.row == died[i][0]) && (pos.col == died[i][1]) {
+                                return .died
+                            }
                         }
                     }
                 }
@@ -98,48 +110,34 @@ class SimulationViewController: UIViewController
             engine.grid = g
             engine.size = size
         }
- 
+        
         self.grid.grid = engine.grid as! Grid
         
         
-//        grid.delegate = self
-//        engine.delegate = self
-
-        /*
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "ViweUpdate")
-        nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            let g = n.userInfo?["GridView"] as! GridView
-            self.grid.grid = g.grid!
-        }
-*/
-/*
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
-        nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-                self.grid.setNeedsDisplay()
-        }
-*/
+        //        grid.delegate = self
+        //        engine.delegate = self
+        
     }
-
-
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
-/*
-    func viewDidUpdate(withGrid: GridProtocol) {
-        engine.grid = withGrid
-    }
-*/
-
+    
+    
+    /*
+     func viewDidUpdate(withGrid: GridProtocol) {
+     engine.grid = withGrid
+     }
+     */
+    
     func engineDidUpdate(withGrid: GridProtocol) {
         self.grid.grid = withGrid
         self.grid.setNeedsDisplay()
     }
     
+    // Action for reset button
     @IBAction func resetButtonAction(_ sender: UIButton, forEvent event: UIEvent) {
         if let currentSize = self.grid.grid?.size.rows {
             let g = Grid(currentSize, currentSize)
@@ -149,10 +147,12 @@ class SimulationViewController: UIViewController
         }
     }
     
+    // Action for save button
     @IBAction func saveButtonAction(_ sender: Any, forEvent event: UIEvent) {
         presentAlert()
     }
     
+    // Popup to creatge a new configuration
     func presentAlert() {
         let alertController = UIAlertController(title: "New Configuation", message: "Please input a name:", preferredStyle: .alert)
         
@@ -185,6 +185,6 @@ class SimulationViewController: UIViewController
         self.grid.grid = engine.step() as! Grid
     }
     
-
+    
 }
 

@@ -8,11 +8,9 @@
 
 import Foundation
 
-
 protocol EngineDelegate {
     func engineDidUpdate(withGrid: GridProtocol)
 }
-
 
 protocol EngineProtocol {
     var delegate : EngineDelegate? { get set }
@@ -47,24 +45,8 @@ class StandardEngine : EngineProtocol {
         }
     }
     var refreshTimer : Timer?
-    var rows : Int /*{
-     
-     didSet {
-     self.cols = rows
-     self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
-     notify(withGrid: self.grid)
-     }
-     
-     } */
-    var cols : Int /*{
-     
-     didSet {
-     self.rows = cols
-     self.grid = Grid(rows, cols, cellInitializer: Grid.gliderInitializer)
-     notify(withGrid: self.grid)
-     }
-     
-     }*/
+    var rows : Int
+    var cols : Int
     var size : Int {
         didSet {
             self.rows = size
@@ -89,7 +71,7 @@ class StandardEngine : EngineProtocol {
             self.size = (g.gridView.grid?.size.rows)!
             print("At Engine after size = \(self.grid.size)")
         }
- 
+        
     }
     
     convenience init (rows: Int, cols: Int, delegate: EngineDelegate) {

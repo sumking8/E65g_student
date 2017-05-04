@@ -38,32 +38,20 @@ class DataHelper {
             //print(json)
             //let resultString = (json as AnyObject).description
             let tmpArray = self.convert(array: json as! NSArray)
-            self.assignData(data: tmpArray)
-            for i in 0...self.jsonArray.count - 1 {
-                let jsonDictionary = self.jsonArray[i]
-                let jsonTitle = jsonDictionary["title"] as! String
-                if self.data[0].count > i {
-                    self.data[0][i] = jsonTitle
-                } else {
-                    self.data[0].append(jsonTitle)
+            self.addData(data: tmpArray)
+            if self.jsonArray.count > 0  {
+                for i in 0...self.jsonArray.count - 1 {
+                    let jsonDictionary = self.jsonArray[i]
+                    let jsonTitle = jsonDictionary["title"] as! String
+                    if self.data[0].count > i {
+                        self.data[0][i] = jsonTitle
+                    } else {
+                        self.data[0].append(jsonTitle)
+                    }
+                    //let jsonContents = jsonDictionary["contents"] as! [[Int]]
                 }
-                //let jsonContents = jsonDictionary["contents"] as! [[Int]]
             }
             
-            
-            /*
-             self.jsonArray = (json as? NSArray)!
-             for i in 0...self.jsonArray.count - 1 {
-             let jsonDictionary = self.jsonArray[i] as! NSDictionary
-             let jsonTitle = jsonDictionary["title"] as! String
-             if self.data[0].count > i {
-             self.data[0][i] = jsonTitle
-             } else {
-             self.data[0].append(jsonTitle)
-             }
-             //let jsonContents = jsonDictionary["contents"] as! [[Int]]
-             }
-             */
             /*
              OperationQueue.main.addOperation {
              self.textView.text = resultString
@@ -73,14 +61,18 @@ class DataHelper {
         }
     }
     
-    func assignData(data: [Dictionary<String, Any>]) {
+    func addData(data: [Dictionary<String, Any>]) {
+        // make sure data concurrency
         internalQueue.sync {
-            for i in 0...data.count - 1 {
-                self.jsonArray.append(data[i])
+            if data.count > 0 {
+                for i in 0...data.count - 1 {
+                    self.jsonArray.append(data[i])
+                }
             }
         }
     }
     
+    // Covert to a more familiar object!!!
     private func convert(array: NSArray) -> [Dictionary<String, Any>] {
         var newArray = [Dictionary<String, Any>]()
         for i in 0...array.count - 1 {

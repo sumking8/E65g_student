@@ -31,6 +31,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     var engine : EngineProtocol = StandardEngine.engine
     
+    // Notification from GridEditor when save
     private func registerGridEditorSaveNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridEditorSave")
@@ -41,45 +42,62 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 self.sizeTextField.text = String(describing: size)
                 self.colLabel.text = self.sizeTextField.text
                 self.rowLabel.text = self.sizeTextField.text
+                
+                // update the table view name
                 let indexPath = self.tableView.indexPathForSelectedRow
                 if let indexPath = indexPath {
+                    let oldName = self.dataHelper.data[indexPath.section][indexPath.row]
                     self.dataHelper.data[indexPath.section][indexPath.row] = g.name
                     self.tableView.reloadData()
-
+                    
+                    // update the userdefault
+                    var defaultData = UserDefaults.standard.array(forKey: "json") as! [Dictionary<String, Any>]
+                    if defaultData.count > 1 {
+                        for i in 0...defaultData.count - 1 {
+                            let defaultTitle = defaultData[i]["title"] as! String
+                            if oldName ==  defaultTitle {
+                                defaultData[i]["title"] = g.name
+                                UserDefaults.standard.set(defaultData, forKey: "json")
+                                UserDefaults.standard.synchronize()
+                                break
+                            }
+                        }
+                    }
                 }
             }
         }
     }
     
+    // Notification from SimulationEditor when save
     private func registerSimulationSaveNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "SimulationSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
             let newConfigurationName = n.userInfo?["Name"] as! String
             self.addRowToTable(withName: newConfigurationName, source: "SimulationSave")
-            
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         // To ensure the data is avaaliable
-        //var counter = 0
+        
+        // To ensure the data are back from the network before showing it
         while (!dataHelper.loaded) {
             usleep(1000)
-            //print("Counter=\(counter) loaded=\(dataHelper.loaded)")
-            //counter = counter + 1
         }
         self.tableView.reloadData()
         registerGridEditorSaveNotification()
         registerSimulationSaveNotification()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         //navigationController?.isNavigationBarHidden = true
         
     }
+    
+    // Action on the On/Off Switch
     @IBAction func switchAction(_ sender: Any, forEvent event: UIEvent) {
         //self.tableView.reloadData()
         if onOffSwitch.isOn {
@@ -98,6 +116,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    // Action for the refresh bar
     @IBAction func refreshRateSlide(_ sender: Any, forEvent event: UIEvent) {
         let interval = Double(1/refreshRateSlider.value)
         let sInterval = String(format: "%.2f", refreshRateSlider.value)
@@ -108,6 +127,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             engine.refreshRate = interval
         }
     }
+    
+    // Action for the TextField size
     @IBAction func editEndOnExit(_ sender: Any, forEvent event: UIEvent) {
         if let size = Int(sizeTextField.text!) {
             colLabel.text = sizeTextField.text
@@ -120,7 +141,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
     }
-    
+    // Action for the "+" button
     @IBAction func addRow(_ sender: UIButton) {
         //tableView.reloadData()
         presentAlert()
@@ -131,7 +152,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         // Dispose of any resources that can be recreated.
     }
     
-    // MARKS: Table
     func numberOfSections(in tableView: UITableView) -> Int {
         return dataHelper.data.count
     }
@@ -146,7 +166,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let title = cell.contentView.subviews.first as! UILabel
         //        print(data[indexPath.section][indexPath.item])
         title.text = dataHelper.data[indexPath.section][indexPath.item]
-        
         
         return cell
     }
@@ -163,6 +182,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             newData.remove(at: indexPath.row)
             dataHelper.data[indexPath.section] = newData
             
+            // Updating the data in UserDefault
             var defaultData = UserDefaults.standard.array(forKey: "json") as! [Dictionary<String, Any>]
             for i in 0...defaultData.count - 1 {
                 let defaultTitle = defaultData[i]["title"] as! String
@@ -189,39 +209,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let jsonDictionary = jArray[i]
                 let title = jsonDictionary["title"] as! String
                 if configureValue == title {
-                    let jsonContents = jsonDictionary["contents"] as! [[Int]]
                     var maxRowCol = 0
-                    var cellInitializer : ((GridPosition) -> CellState)
-                    print("Total # of cells: \(jsonContents.count)")
-                    
                     if let size = jsonDictionary["size"] {
                         maxRowCol = size as! Int
-                        cellInitializer = { (pos: GridPosition) -> CellState in
-                            for i in 0...jsonContents.count - 1 {
-                                if (pos.row == jsonContents[i][0]) && (pos.col == jsonContents[i][1]) {
-                                    return .alive
-                                }
-                            }
-                            if let b = jsonDictionary["born"] {
-                                let born = b as! [[Int]]
-                                for i in 0...born.count - 1 {
-                                    if (pos.row == born[i][0]) && (pos.col == born[i][1]) {
-                                        return .born
-                                    }
-                                }
-                            }
-                            if let d = jsonDictionary["died"] {
-                                let died = d as! [[Int]]
-                                for i in 0...died.count - 1 {
-                                    if (pos.row == died[i][0]) && (pos.col == died[i][1]) {
-                                        return .died
-                                    }
-                                }
-                            }
-                            return .empty
-                        }
-                        
                     } else {
+                        let jsonContents = jsonDictionary["contents"] as! [[Int]]
                         for i in 0...jsonContents.count - 1 {
                             if jsonContents[i][0] > maxRowCol {
                                 maxRowCol = jsonContents[i][0]
@@ -231,17 +223,41 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                             }
                         }
                         maxRowCol = maxRowCol * 2
-                        cellInitializer = { (pos: GridPosition) -> CellState in
-                            for i in 0...jsonContents.count - 1 {
-                                if (pos.row == jsonContents[i][0]) && (pos.col == jsonContents[i][1]) {
-                                    return .alive
+                    }
+                    let cellInitializer : ((GridPosition) -> CellState) = {
+                        (pos: GridPosition) -> CellState in
+                        if let a = jsonDictionary["contents"] {
+                            let alive = a as! [[Int]]
+                            if alive.count > 0 {
+                                for i in 0...alive.count - 1 {
+                                    if (pos.row == alive[i][0]) && (pos.col == alive[i][1]) {
+                                        return .alive
+                                    }
                                 }
                             }
-                            return .empty
                         }
+                        if let b = jsonDictionary["born"] {
+                            let born = b as! [[Int]]
+                            if born.count > 0 {
+                                for i in 0...born.count - 1 {
+                                    if (pos.row == born[i][0]) && (pos.col == born[i][1]) {
+                                        return .born
+                                    }
+                                }
+                            }
+                        }
+                        if let d = jsonDictionary["died"] {
+                            let died = d as! [[Int]]
+                            if died.count > 0 {
+                                for i in 0...died.count - 1 {
+                                    if (pos.row == died[i][0]) && (pos.col == died[i][1]) {
+                                        return .died
+                                    }
+                                }
+                            }
+                        }
+                        return .empty
                     }
-                    
-                    
                     
                     print(type(of:segue.destination))
                     if let vc = segue.destination as? GridEditorViewController {
@@ -250,13 +266,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                         if let indexPath = indexPath {
                             vc.name = self.dataHelper.data[indexPath.section][indexPath.row]
                         }
-                        //vc.gridView.setNeedsDisplay();
-                        /*
-                         vc.saveClosure = { newValue in
-                         data[indexPath.section][indexPath.row] = newValue
-                         self.tableView.reloadData()
-                         */
-                        break
                     }
                 }
                 
@@ -264,8 +273,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    
-    func addRowToTable(withName: String, source: String) {
+    // Add a new row to table
+    private func addRowToTable(withName: String, source: String) {
         dataHelper.data[0].append(withName)
         var iArray = [[Int]]()
         var bArray = [[Int]]()
@@ -293,15 +302,18 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if dArray.count > 0 {
             dict["died"] = dArray
         }
+        
+        // Update the UserDefault
         self.saveUserDefault(title: withName, dict: dict, source:source)
+        
+        // Update table
         dataHelper.jsonArray.append(dict)
         tableView.beginUpdates()
         tableView.insertRows(at: [IndexPath(row: dataHelper.data[0].count-1, section: 0)], with: .automatic)
         tableView.endUpdates()
-        print("Somehting")
     }
     
-    func saveUserDefault(title:String, dict:Dictionary<String, Any>, source:String) {
+    private func saveUserDefault(title:String, dict:Dictionary<String, Any>, source:String) {
         if let mySavedArray = UserDefaults.standard.object(forKey: "json") {
             var array = mySavedArray as! [Dictionary<String, Any>]
             //var newArray = [Dictionary<String, Any>]()
@@ -325,13 +337,16 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             UserDefaults.standard.set(newArray, forKey: "json")
             
         }
+        
+        // This is explictly for Simulation for the latest save.
         if (source == "SimulationSave") {
             UserDefaults.standard.set(dict, forKey: "lastSaveForSimulation")
         }
         UserDefaults.standard.synchronize()
     }
     
-    func presentAlert() {
+    // A new alert that capture the new name of a new configuraion
+    private func presentAlert() {
         let alertController = UIAlertController(title: "New Configuation", message: "Please input a name:", preferredStyle: .alert)
         
         let confirmAction = UIAlertAction(title: "Confirm", style: .default) { (_) in

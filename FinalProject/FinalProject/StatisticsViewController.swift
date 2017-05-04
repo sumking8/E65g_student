@@ -19,35 +19,6 @@ class StatisticsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        /*
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
-        nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
-            self.reset()
-            let engine = n.userInfo?["StandardEngine"] as! EngineProtocol
-            let size = engine.grid.size
-            (0 ..< size.rows).forEach { i in
-                (0 ..< size.cols).forEach { j in
-                    switch engine.grid[i, j] {
-                    case .alive :
-                        self.add(self.cAlive)
-                        break
-                    case .born :
-                        self.add(self.cBorn)
-                        break
-                    case .died :
-                        self.add(self.cDied)
-                        break
-                    case .empty :
-                        self.add(self.cEmpty)
-                        break
-                    }
-
-                }
-            }
-
-        }
-        */
         registerEngineNotification()
         registerGridViewNotification()
         registerGridEditorSaveNotification()
@@ -58,6 +29,7 @@ class StatisticsViewController: UIViewController {
         aView.setNeedsDisplay()
     }
     
+    // Notification from Engine
     private func registerEngineNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -70,6 +42,7 @@ class StatisticsViewController: UIViewController {
         }
     }
     
+    // Notification from GridView
     private func registerGridViewNotification() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "ViweUpdate")
@@ -81,22 +54,24 @@ class StatisticsViewController: UIViewController {
             self.aView.setNeedsDisplay()
         }
     }
-
+    
     private func registerGridEditorSaveNotification() {
-        /*
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridEditorSave")
         nc.addObserver(forName: name, object: nil, queue: nil) { (n) in
+            //let g = n.userInfo?["GridView"] as! GridView
+            
+            let g = n.userInfo?["GridEditorViewController"] as! GridEditorViewController
+            let size = g.gridView.grid?.size
+            
             self.reset()
-            let gridView = n.userInfo?["GridView"] as! GridView
-            let size = gridView.grid?.size
-            self.count(row: (size?.rows)!, col: (size?.cols)!, g: gridView.grid!)
+            self.count(row: (size?.rows)!, col: (size?.cols)!, g: g.gridView.grid!)
             self.aView.setNeedsDisplay()
         }
-         */
     }
+
     private func count(row: Int, col: Int, g : GridProtocol) {
-        print ("Before Alive: \(cAlive.text ?? "0") Born: \(cBorn.text ?? "0") Died: \(cDied.text ?? "0") Empty: \(cEmpty.text ?? "0")")
+        //print ("Before Alive: \(cAlive.text ?? "0") Born: \(cBorn.text ?? "0") Died: \(cDied.text ?? "0") Empty: \(cEmpty.text ?? "0")")
         (0..<row).forEach { i in
             (0..<col).forEach { j in
                 switch g[i, j] {
@@ -111,7 +86,7 @@ class StatisticsViewController: UIViewController {
                 }
             }
         }
-        print ("After Alive: \(cAlive.text ?? "0") Born: \(cBorn.text ?? "0") Died: \(cDied.text ?? "0") Empty: \(cEmpty.text ?? "0")")
+        //print ("After Alive: \(cAlive.text ?? "0") Born: \(cBorn.text ?? "0") Died: \(cDied.text ?? "0") Empty: \(cEmpty.text ?? "0")")
     }
     
     private func reset() {
@@ -120,7 +95,7 @@ class StatisticsViewController: UIViewController {
         cDied.text = "0"
         cEmpty.text = "0"
     }
-
+    
     private func add(_ label : UILabel) {
         label.text = String(Int(label.text!)! + 1)
     }
